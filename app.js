@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectFilters();
   initContactForm();
   initScrollAnimations();
+  initSpotlightEffect();
+  initScrollTracking();
+  initMagneticButtons();
 });
 
 // --- Theme Management ---
@@ -402,20 +405,86 @@ function initScrollAnimations() {
     });
   }, { threshold: 0.1 });
 
-  // Add styles dynamically for scroll fade-in
-  const styleEl = document.createElement('style');
-  styleEl.innerHTML = `
-    .animate-on-scroll {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .animate-on-scroll.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  `;
-  document.head.appendChild(styleEl);
-
   animateElements.forEach(el => observer.observe(el));
 }
+
+// --- Cursor Spotlight Glow Effect ---
+function initSpotlightEffect() {
+  const cards = document.querySelectorAll('.glass-hover');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+}
+
+// --- Scroll Progress & Orb Drift Parallax ---
+function initScrollTracking() {
+  const progressBar = document.getElementById('scroll-progress');
+  const backToTop = document.getElementById('back-to-top');
+  const orb1 = document.querySelector('.orb-1');
+  const orb2 = document.querySelector('.orb-2');
+  const orb3 = document.querySelector('.orb-3');
+
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    
+    if (progressBar) {
+      progressBar.style.width = scrolled + '%';
+    }
+
+    if (backToTop) {
+      if (winScroll > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    }
+
+    // Passive drifting of ambient background orbs on scroll
+    const driftY = winScroll * 0.12;
+    const driftX = winScroll * 0.04;
+    
+    if (orb1) orb1.style.transform = `translate(${driftX}px, ${driftY}px)`;
+    if (orb2) orb2.style.transform = `translate(${-driftX}px, ${-driftY}px)`;
+    if (orb3) orb3.style.transform = `translate(${-driftX * 0.5}px, ${driftY * 0.6}px)`;
+  });
+
+  if (backToTop) {
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+}
+
+// --- Magnetic Interactive Elements ---
+function initMagneticButtons() {
+  const magnetTargets = document.querySelectorAll('.btn, .social-link, .theme-toggle-btn');
+  
+  magnetTargets.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - (rect.left + rect.width / 2);
+      const y = e.clientY - (rect.top + rect.height / 2);
+      
+      // Pull button slightly towards mouse
+      el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+      el.style.transition = 'transform 0.1s ease-out';
+    });
+    
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+      el.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+    });
+  });
+}
+

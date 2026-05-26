@@ -18,6 +18,9 @@
 </head>
 <body>
 
+  <!-- Scroll Progress Indicator -->
+  <div id="scroll-progress" class="scroll-progress"></div>
+
   <!-- Background Ambient Glows -->
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
@@ -125,16 +128,16 @@
               "We don't just configure servers; we code self-healing pipelines and wrap them in robust security guardrails."
             </div>
             
-            <div class="stats-grid">
-              <div class="stat-card glass">
+            <div class="stats-grid stagger-grid">
+              <div class="stat-card glass animate-on-scroll">
                 <div class="stat-num">10+</div>
                 <div class="stat-lbl">Years Experience</div>
               </div>
-              <div class="stat-card glass">
+              <div class="stat-card glass animate-on-scroll">
                 <div class="stat-num">500+</div>
                 <div class="stat-lbl">Builds Managed</div>
               </div>
-              <div class="stat-card glass">
+              <div class="stat-card glass animate-on-scroll">
                 <div class="stat-num">100%</div>
                 <div class="stat-lbl">ISO Audit Success</div>
               </div>
@@ -184,7 +187,7 @@
           <h2 class="section-title">Technical Expertise</h2>
         </div>
         
-        <div class="skills-grid">
+        <div class="skills-grid stagger-grid">
           <!-- Category 1 -->
           <div class="skill-category glass animate-on-scroll">
             <h3 class="skill-cat-title">
@@ -304,7 +307,7 @@
           <h2 class="section-title">Timeline</h2>
         </div>
         
-        <div class="timeline-container">
+        <div class="timeline-container stagger-grid">
           <!-- Item 1 -->
           <div class="timeline-item animate-on-scroll">
             <div class="timeline-badge"></div>
@@ -362,7 +365,7 @@
           <button class="filter-btn" data-filter="compliance">IT Governance</button>
         </div>
         
-        <div class="projects-grid">
+        <div class="projects-grid stagger-grid">
           <!-- Card 1 -->
           <article class="project-card glass glass-hover animate-on-scroll" data-category="security">
             <div class="project-img-box">
@@ -452,9 +455,9 @@
           <h2 class="section-title">Endorsements & Testimonials</h2>
         </div>
         
-        <div class="testimonials-carousel animate-on-scroll">
+        <div class="testimonials-carousel stagger-grid">
           <!-- Card 1 -->
-          <div class="testimonial-card glass glass-hover">
+          <div class="testimonial-card glass glass-hover animate-on-scroll">
             <div class="quote-icon">“</div>
             <p class="testimonial-quote">
               "Shridhar commands his environments with high-level prompt engineering. His solutions are clean, securely parameterized, and robustly built. He turns vibe coding into a science."
@@ -469,7 +472,7 @@
           </div>
           
           <!-- Card 2 -->
-          <div class="testimonial-card glass glass-hover">
+          <div class="testimonial-card glass glass-hover animate-on-scroll">
             <div class="quote-icon">“</div>
             <p class="testimonial-quote">
               "His Azure pipeline configurations are flawless. The way he integrates SonarScan and SCA checks makes my refactoring and validation runs highly efficient."
@@ -484,7 +487,7 @@
           </div>
           
           <!-- Card 3 -->
-          <div class="testimonial-card glass glass-hover">
+          <div class="testimonial-card glass glass-hover animate-on-scroll">
             <div class="quote-icon">“</div>
             <p class="testimonial-quote">
               "Shridhar has an incredible vision for infrastructure compliance. He structured our ISO policies and user access lists so well that audits are now completely stress-free."
@@ -510,8 +513,8 @@
         </div>
         
         <div class="contact-grid">
-          <div class="contact-info animate-on-scroll">
-            <div class="contact-method-card glass glass-hover">
+          <div class="contact-info stagger-grid">
+            <div class="contact-method-card glass glass-hover animate-on-scroll">
               <div class="contact-icon-box">
                 <i data-lucide="mail"></i>
               </div>
@@ -521,7 +524,7 @@
               </div>
             </div>
             
-            <div class="contact-method-card glass glass-hover">
+            <div class="contact-method-card glass glass-hover animate-on-scroll">
               <div class="contact-icon-box">
                 <i data-lucide="map-pin"></i>
               </div>
@@ -531,7 +534,7 @@
               </div>
             </div>
             
-            <div class="contact-method-card glass glass-hover">
+            <div class="contact-method-card glass glass-hover animate-on-scroll">
               <div class="contact-icon-box">
                 <i data-lucide="check-circle-2"></i>
               </div>
@@ -591,6 +594,11 @@
       </div>
     </div>
   </footer>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" class="back-to-top glass" aria-label="Back to Top">
+    <i data-lucide="chevrons-up"></i>
+  </button>
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
