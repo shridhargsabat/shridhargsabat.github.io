@@ -273,8 +273,6 @@ header.scrolled {
 /* --- Custom Theme Toggle --- */
 .theme-toggle-btn {
   background: var(--bg-glass);
-  backdrop-filter: blur(12px) saturate(150%);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
   border: 1px solid var(--border-glass);
   width: 44px;
   height: 44px;
