@@ -170,7 +170,7 @@ function createCommandInput() {
   wrapper.className = 'console-line';
   wrapper.innerHTML = `
     <span class="console-prompt">&gt;</span>
-    <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" style="
+    <input type="text" id="terminal-input" aria-label="Terminal Command Input" autocomplete="off" spellcheck="false" style="
       background: transparent;
       border: none;
       color: var(--color-text-primary);
