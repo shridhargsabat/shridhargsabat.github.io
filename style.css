@@ -1,62 +1,23 @@
-/* 
-  =========================================
-  Premium Glassmorphism Theme System
-  Dark & Light Mode Cyberpunk Aesthetics
-  =========================================
-*/
-
-/* --- Google Fonts --- */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+/* --- Google Fonts: Anton (display), Manrope (body), Caveat (accent) --- */
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap');
 
 :root {
-  /* --- Typography --- */
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
-
-  /* --- Color Tokens: Dark Mode (Default) --- */
-  --bg-main: #060913;
-  --bg-gradient: radial-gradient(circle at 50% 50%, #0d1527 0%, #060913 100%);
-  --bg-glass: rgba(13, 21, 40, 0.35);
-  --bg-glass-hover: rgba(20, 32, 60, 0.5);
-  --border-glass: rgba(255, 255, 255, 0.12);
-  --border-glass-hover: rgba(255, 255, 255, 0.25);
-  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  
-  --color-primary: #8b5cf6; /* Cyber Violet */
-  --color-secondary: #06b6d4; /* Cyber Cyan */
-  --color-accent: #ec4899; /* Neon Rose */
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  
-  --glow-color: rgba(139, 92, 246, 0.25);
-  --glow-color-secondary: rgba(6, 182, 212, 0.25);
-  
-  /* --- Animation Durations --- */
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* --- Light Mode Tokens --- */
-[data-theme="light"] {
-  --bg-main: #f3f4f6;
-  --bg-gradient: radial-gradient(circle at 50% 50%, #e5e7eb 0%, #f3f4f6 100%);
-  --bg-glass: rgba(255, 255, 255, 0.5);
-  --bg-glass-hover: rgba(255, 255, 255, 0.72);
-  --border-glass: rgba(0, 0, 0, 0.1);
-  --border-glass-hover: rgba(0, 0, 0, 0.2);
-  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
-  
-  --color-primary: #6d28d9; /* Deep Royal Violet */
-  --color-secondary: #0891b2; /* Darker Cyan */
-  --color-accent: #db2777; /* Darker Rose */
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #64748b;
-  
-  --glow-color: rgba(109, 40, 217, 0.12);
-  --glow-color-secondary: rgba(8, 145, 178, 0.12);
+  /* --- Spec design tokens (single dark theme; light mode removed) --- */
+  --bg: #090909;
+  --text: #f2efeb;
+  --accent: #e32b3c;
+  --muted: #a09c9a;
+  --line: rgba(242, 239, 235, 0.12);
+  --card: #101010;
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-accent: 'Caveat', cursive;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.2s var(--ease);
+  --transition-normal: 0.6s var(--ease);
+  --transition-slow: 0.8s var(--ease);
+  --radius: 14px;
+  --maxw: 1200px;
 }
 
 /* --- Base Resets --- */
@@ -73,10 +34,8 @@ html {
 }
 
 body {
-  background: var(--bg-main);
-  background-image: var(--bg-gradient);
-  background-attachment: fixed;
-  color: var(--color-text-primary);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-body);
   line-height: 1.6;
   overflow-x: hidden;
