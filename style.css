@@ -25,6 +25,7 @@
 html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;overflow-x:hidden}
 img{max-width:100%;height:auto;display:block}
+[hidden]{display:none !important}
 .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 section{padding:96px 0;border-top:1px solid var(--line)}
 .section-kicker{font-family:var(--font-accent);font-size:1.4rem;color:var(--accent)}
