@@ -1,16 +1,16 @@
 {
   "name": "selfportfolio",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "Shridhar Sabat portfolio — premium cinematic-minimal static site",
+  "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "check": "node scripts/check.mjs"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "author": "Shridhar Sabat",
+  "license": "UNLICENSED",
   "devDependencies": {
     "vite": "^8.0.14"
   }
