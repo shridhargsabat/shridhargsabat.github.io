@@ -46,6 +46,7 @@ function mountSwarmLite() {
   cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.5';
   hero.style.position = 'relative';
   hero.appendChild(cv);
+  cv.toggleAttribute('hidden', document.body.classList.contains('motion-off')); // sync when booting with Motion off (E2E fix)
   const ctx = cv.getContext('2d');
   let W, H, pts = [];
   const size = () => {
@@ -69,6 +70,12 @@ function mountSwarmLite() {
         const dx = mx - p.x, dy = my - p.y, d = Math.hypot(dx, dy) || 1;
         if (d < 140) { p.vx += dx / d * .03; p.vy += dy / d * .03; }
         p.vx *= .985; p.vy *= .985;
+        // Ambient wander + minimum speed so particles never freeze when idle (E2E fix)
+        p.ph = (p.ph ?? Math.random() * 6.283) + 0.02;
+        p.vx += Math.sin(p.ph + p.y * 0.02) * 0.02;
+        p.vy += Math.cos(p.ph + p.x * 0.02) * 0.02;
+        const sp = Math.hypot(p.vx, p.vy);
+        if (sp < 0.2) { const a = Math.atan2(p.vy, p.vx) || p.ph; p.vx = Math.cos(a) * 0.2; p.vy = Math.sin(a) * 0.2; }
         p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > W) p.vx *= -1;
         if (p.y < 0 || p.y > H) p.vy *= -1;

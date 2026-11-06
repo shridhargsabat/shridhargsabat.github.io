@@ -66,8 +66,12 @@ function renderGrid() {
   const more = $('#load-more');
   more.hidden = visibleCount >= list.length;
   more.onclick = () => { visibleCount += PAGE_SIZE; renderGrid(); };
-  $$('.project-card', grid).forEach(card =>
-    card.addEventListener('click', () => openDialog(card.dataset.id)));
+  $$('.project-card', grid).forEach(card => {
+    card.addEventListener('click', () => openDialog(card.dataset.id));
+    card.addEventListener('keydown', e => { // role=button needs manual keys (E2E fix)
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDialog(card.dataset.id); }
+    });
+  });
 }
 function cardHtml(p) {
   const img = p.coverImage ? `<img src="${p.coverImage}" alt="${escapeHtml(p.title)} cover" loading="lazy">` : '';
