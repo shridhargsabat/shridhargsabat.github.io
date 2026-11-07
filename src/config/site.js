@@ -52,8 +52,10 @@ export const SITE = {
     showContactForm: true,   // mailto: fallback (no backend on static Pages)
     showDownloadResume: false,
     showProjectArchive: true,
+    swarmAutoStart: 'once', // 'once' | 'always' | 'never' — auto-play the swarm spectacle
   },
   motionStorageKey: 'shridhar-portfolio-motion', // site-specific persistence key
+  swarmSeenKey: 'shridhar-portfolio-swarm-seen', // first-visit autostart marker
 };
 
 export const EASE = [0.22, 1, 0.36, 1]; // shared motion ease (spec §5)
