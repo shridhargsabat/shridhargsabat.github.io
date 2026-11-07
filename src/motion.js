@@ -9,10 +9,12 @@ export function initMotion(SITE) {
   let enabled = stored !== null ? stored === 'on' : !reduceOS;
   const apply = () => {
     document.body.classList.toggle('motion-off', !enabled);
+    document.documentElement.classList.toggle('motion-off', !enabled); // sync pre-paint head bootstrap
     btn.setAttribute('aria-pressed', String(enabled));
     btn.textContent = enabled ? 'Motion: On' : 'Motion: Off';
     try { localStorage.setItem(key, enabled ? 'on' : 'off'); } catch { /* ignore */ }
     document.getElementById('swarm-canvas')?.toggleAttribute('hidden', !enabled);
+    if (!enabled) document.querySelectorAll('.btn-primary').forEach(el => { el.style.transform = ''; });
   };
   btn.addEventListener('click', () => { enabled = !enabled; apply(); });
   apply();
@@ -24,17 +26,43 @@ export function initMotion(SITE) {
     bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight || 1) * 100) + '%';
   }, { passive: true });
 
-  // Reveal-on-scroll (re-observe dynamically added cards)
+  // Reveal-on-scroll (re-observe dynamically added cards).
+  // .hero-meta is excluded: it has its own load entrance, not a scroll reveal.
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }), { threshold: 0.12 });
   const observeAll = () => document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
   observeAll();
   new MutationObserver(observeAll).observe(document.getElementById('project-grid'), { childList: true });
-  document.querySelectorAll('section .container').forEach(el => el.classList.add('reveal'));
+  // Reveal setup must not animate 1→0 (that flash/fade is setup, not a reveal):
+  // paint the initial hidden state with transitions suppressed first.
+  document.body.classList.add('reveal-setup');
+  document.querySelectorAll('section .container:not(.hero-meta)').forEach(el => el.classList.add('reveal'));
   observeAll();
-
+  requestAnimationFrame(() => requestAnimationFrame(() =>
+    document.body.classList.remove('reveal-setup')));
   mountSwarmLite();
+  // Entrance runs once at load (~1.1s max); flag it done so re-enabling
+  // Motion later never replays the hero animation.
+  setTimeout(() => document.body.classList.add('entrance-done'), 1800);
+  mountMagnetic();
+}
+
+// Subtle magnetic pull on primary CTAs. Fine pointers only; instantly neutral
+// with Motion off, reduced motion, or touch (never mounted there).
+function mountMagnetic() {
+  if (!matchMedia('(pointer: fine)').matches) return;
+  const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+  const clamp = (v, m) => Math.max(-m, Math.min(m, v));
+  document.querySelectorAll('.btn-primary').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      if (document.body.classList.contains('motion-off') || reduceMQ.matches) { el.style.transform = ''; return; }
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      el.style.transform = `translate(${clamp(dx * 0.18, 8).toFixed(1)}px,${clamp(dy * 0.18, 8).toFixed(1)}px)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
 }
 
 // ~70-line flocking dots on a hero canvas. pointer-fine only, never blocks input.
@@ -43,7 +71,7 @@ function mountSwarmLite() {
   if (!hero || matchMedia('(pointer: coarse)').matches) return;
   const cv = document.createElement('canvas');
   cv.id = 'swarm-canvas';
-  cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.5';
+  cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.5;z-index:2';
   hero.style.position = 'relative';
   hero.appendChild(cv);
   cv.toggleAttribute('hidden', document.body.classList.contains('motion-off')); // sync when booting with Motion off (E2E fix)

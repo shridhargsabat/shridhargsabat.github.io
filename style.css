@@ -39,7 +39,7 @@ section{padding:96px 0;border-top:1px solid var(--line)}
 .nav-menu{display:flex;gap:22px;list-style:none}
 .nav-link{color:var(--muted);text-decoration:none;font-weight:600;position:relative;padding:6px 2px}
 .nav-link.active,.nav-link:hover{color:var(--text)}
-.nav-link.active::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--accent)}
+.nav-link.active::after{content:"";position:absolute;left:50%;bottom:-7px;width:6px;height:6px;border-radius:50%;background:var(--accent);transform:translateX(-50%)}
 .header-actions{display:flex;align-items:center;gap:12px}
 .motion-btn{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:10px 16px;min-height:44px;cursor:pointer;font:inherit}
 .motion-btn:hover{border-color:var(--accent)}
@@ -106,6 +106,7 @@ dialog#project-dialog::backdrop{background:rgba(0,0,0,.7)}
 /* Reveal-on-scroll (JS adds .in; disabled when motion off — see app.js) */
 .reveal{opacity:0;transform:translateY(32px);transition:opacity var(--transition-normal),transform var(--transition-normal)}
 .reveal.in{opacity:1;transform:none}
+body.reveal-setup .reveal{transition:none !important}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 body.motion-off .reveal{opacity:1 !important;transform:none !important;transition:none !important}
 /* Responsive: 1100 / 800 / 600 / 370 */
@@ -123,3 +124,52 @@ body.motion-off .reveal{opacity:1 !important;transform:none !important;transitio
   .motion-btn,.build-btn{padding:8px 12px;font-size:.85rem}
 }
 @media(max-width:370px){.container{padding:0 16px}.hero-cta .btn{width:100%;justify-content:center}.header-actions{gap:6px}.logo{font-size:.95rem}.motion-btn,.build-btn{padding:8px 10px;font-size:.8rem}}
+/* --- Reference-parity motion A–E --- */
+/* Keyframed motion runs ONLY when motion is on (no .motion-off on html/body),
+   the OS allows motion, and (for the entrance) it hasn't completed yet.
+   Otherwise .hero-enter/.marquee-track render with natural visible styles. */
+@media (prefers-reduced-motion: no-preference){
+  html:not(.motion-off) body:not(.motion-off):not(.entrance-done) .hero-enter{
+    opacity:0;
+    animation:hero-rise .55s var(--ease) forwards;
+    animation-delay:var(--enter-delay,0s);
+  }
+  @keyframes hero-rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+  html:not(.motion-off) body:not(.motion-off) .scroll-arrow{display:inline-block;animation:cue-bounce 1.6s ease-in-out infinite}
+  @keyframes cue-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+  html:not(.motion-off) body:not(.motion-off) .marquee-track{animation:marquee-scroll 30s linear infinite}
+  @keyframes marquee-scroll{to{transform:translateX(-50%)}}
+}
+.marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
+html.motion-off .marquee-track,body.motion-off .marquee-track{animation:none}
+/* A. Hero backdrop word + column layout for the meta strip */
+.hero-section{flex-direction:column;justify-content:center;gap:40px;position:relative;overflow:clip}
+.hero-visual{position:relative}
+.hero-backdrop{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:clamp(3rem,8.5vw,7.5rem);letter-spacing:.04em;color:var(--accent);white-space:nowrap;user-select:none;pointer-events:none;z-index:0}
+.hero-visual img{position:relative;z-index:1}
+/* B. Metric counters */
+.hero-metrics{display:flex;gap:28px;flex-wrap:wrap;margin:28px 0 0;padding:20px 0 0;border-top:1px solid var(--line)}
+.metric{display:grid;gap:2px}
+.metric dt{order:2;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+.metric dd{order:1;margin:0;font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.6rem);color:var(--accent);line-height:1}
+/* A. Bottom hero meta strip */
+.hero-meta{display:flex;align-items:center;justify-content:space-between;gap:8px 20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
+.meta-featured{color:var(--text);text-decoration:none;display:flex;flex-direction:column;gap:2px;min-height:44px;justify-content:center}
+.meta-featured:hover .featured-title{color:var(--accent)}
+.meta-kicker{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;font-weight:700}
+.featured-title{font-weight:700}
+.scroll-cue{display:inline-flex;align-items:center;gap:10px;color:var(--muted);text-decoration:none;font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;font-weight:700;min-height:44px}
+.scroll-cue:hover{color:var(--text)}
+.scroll-arrow{color:var(--accent);font-size:1rem;line-height:1}
+.meta-work{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.14em;font-weight:700}
+/* C. Tools marquee ticker */
+.marquee{overflow-x:auto;scrollbar-width:thin;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0}
+.marquee-track{display:flex;width:max-content}
+.marquee-half{display:flex;gap:12px;padding-right:12px}
+.marquee-item{border:1px solid var(--line);border-radius:999px;padding:10px 18px;white-space:nowrap;font-weight:600;background:var(--card)}
+.marquee-count{color:var(--muted);margin-bottom:14px}
+.marquee-controls{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+/* E. Magnetic CTAs (transform set by JS; transition smooths it) */
+.btn-primary{transition:transform .25s var(--ease),filter .2s var(--ease)}
+body.motion-off .btn-primary{transform:none !important}
+@media(max-width:600px){.hero-meta{justify-content:center;text-align:center}.hero-metrics{gap:20px}}

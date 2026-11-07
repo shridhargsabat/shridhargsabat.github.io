@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSkills();
   renderTimeline();
   renderContactLinks();
+  renderHeroMeta();
+  renderMetrics();
+  renderMarquee();
   initNav();
   initDialog();
   initForm();
@@ -96,6 +99,72 @@ function renderContactLinks() {
   if (c.whatsapp) links.push(`<a class="btn btn-secondary" href="https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Hi ' + SITE.identity.fullName + ', I saw your portfolio and would like to talk.')}" target="_blank" rel="noopener">WhatsApp</a>`);
   $('#contact-links').innerHTML = links.join(' ');
 }
+// Hero meta strip: featured build (from data, links to #work) + derived work label.
+// No years anywhere — PROJECTS entries carry no verified years, so none are shown.
+function renderHeroMeta() {
+  const feat = PROJECTS.find(p => p.featured) ?? PROJECTS[0];
+  const link = $('#featured-link');
+  if (feat && link) {
+    link.querySelector('.featured-title').textContent = feat.title;
+  } else {
+    link?.setAttribute('hidden', '');
+  }
+  const label = $('#work-label');
+  if (label) label.textContent = `${PROJECTS.length} selected build${PROJECTS.length === 1 ? '' : 's'}`;
+}
+const motionReduced = () =>
+  document.body.classList.contains('motion-off') ||
+  matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Metric counters — every value derived, never hardcoded:
+// years from the verified bio ("16+ years"), builds/roles from data lengths.
+function renderMetrics() {
+  const wrap = $('#hero-metrics');
+  if (!wrap) return;
+  const m = `${SITE.identity.intro} ${SITE.identity.about}`.match(/(\d+)\s*\+\s*years?/i);
+  const defs = [
+    { el: $('#metric-years'), wrap: $('#metric-years-wrap'), value: m ? Number(m[1]) : null, suffix: '+' },
+    { el: $('#metric-builds'), value: PROJECTS.length, suffix: '' },
+    { el: $('#metric-roles'), value: EXPERIENCE.length, suffix: '' },
+  ];
+  defs.forEach(d => { if (d.value == null && d.wrap) d.wrap.setAttribute('hidden', ''); });
+  let done = false;
+  const run = () => {
+    if (done) return; done = true;
+    defs.forEach(d => { if (d.value != null) animateCount(d.el, d.value, d.suffix); });
+  };
+  if (motionReduced()) { run(); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { run(); io.disconnect(); }
+  }), { threshold: 0.2 });
+  io.observe(wrap);
+}
+function animateCount(el, target, suffix) {
+  if (!el) return;
+  if (motionReduced()) { el.textContent = target + suffix; return; }
+  const t0 = performance.now(), dur = 1100;
+  const step = t => {
+    if (motionReduced()) { el.textContent = target + suffix; return; }
+    const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * e) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+// Tools marquee: real TOOLS list rendered twice for a seamless CSS loop,
+// plus arrow buttons that scroll the viewport and a derived count label.
+function renderMarquee() {
+  const track = $('#tools-track');
+  if (!track) return;
+  const items = TOOLS.map(t => `<span class="marquee-item">${escapeHtml(t)}</span>`).join('');
+  track.innerHTML =
+    `<div class="marquee-half">${items}</div><div class="marquee-half" aria-hidden="true">${items}</div>`;
+  const count = $('#tools-count');
+  if (count) count.textContent = `${TOOLS.length} tools in the kit`;
+  const view = $('#tools-marquee');
+  const stepBy = dir => view?.scrollBy({ left: dir * 260, behavior: motionReduced() ? 'auto' : 'smooth' });
+  $('#marquee-prev')?.addEventListener('click', () => stepBy(-1));
+  $('#marquee-next')?.addEventListener('click', () => stepBy(1));
+}
 function initNav() {
   const burger = $('.hamburger'), menu = $('#nav-menu');
   burger.addEventListener('click', () => {
@@ -105,10 +174,14 @@ function initNav() {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { menu.classList.remove('active'); burger.setAttribute('aria-expanded', 'false'); }
   });
-  // Active-section highlight
+  // Active-section highlight (red dot via CSS) + aria-current for AT
   const links = $$('.nav-link');
   const obs = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.dataset.nav === e.target.id));
+    if (e.isIntersecting) links.forEach(l => {
+      const on = l.dataset.nav === e.target.id;
+      l.classList.toggle('active', on);
+      if (on) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current');
+    });
   }), { rootMargin: '-40% 0px -55% 0px' });
   ['hero', 'work', 'about', 'experience', 'contact'].forEach(id => { const s = document.getElementById(id); if (s) obs.observe(s); });
 }
