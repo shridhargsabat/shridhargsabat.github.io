@@ -43,6 +43,9 @@ section{padding:96px 0;border-top:1px solid var(--line)}
 .header-actions{display:flex;align-items:center;gap:12px}
 .motion-btn{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:10px 16px;min-height:44px;cursor:pointer;font:inherit}
 .motion-btn:hover{border-color:var(--accent)}
+.build-btn{background:rgba(227,43,60,.12);border:1px solid var(--accent);color:var(--text);border-radius:999px;padding:10px 16px;min-height:44px;cursor:pointer;font:inherit;font-weight:700;white-space:nowrap}
+.build-btn:hover{background:rgba(227,43,60,.25)}
+.build-btn[aria-pressed="true"]{background:var(--accent);color:#fff}
 .hamburger{display:none;background:none;border:0;cursor:pointer;min-width:44px;min-height:44px}
 .hamburger span{display:block;width:24px;height:2px;background:var(--text);margin:5px auto}
 /* Buttons */
@@ -97,6 +100,7 @@ dialog#project-dialog::backdrop{background:rgba(0,0,0,.7)}
 .form-note{color:var(--muted);font-size:.85rem}
 .footer-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:28px 24px}
 .footer-row a{color:var(--muted)}
+.swarm-credit{color:var(--muted);font-size:.8rem}
 /* Scroll progress */
 .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:60}
 /* Reveal-on-scroll (JS adds .in; disabled when motion off — see app.js) */
@@ -114,5 +118,8 @@ body.motion-off .reveal{opacity:1 !important;transform:none !important;transitio
   .project-grid{grid-template-columns:minmax(0,1fr)}
   section{padding:64px 0}
   .header-actions .btn{display:none}
+  .header-actions{gap:8px}
+  .logo{font-size:1.05rem}
+  .motion-btn,.build-btn{padding:8px 12px;font-size:.85rem}
 }
-@media(max-width:370px){.container{padding:0 16px}.hero-cta .btn{width:100%;justify-content:center}}
+@media(max-width:370px){.container{padding:0 16px}.hero-cta .btn{width:100%;justify-content:center}.header-actions{gap:6px}.logo{font-size:.95rem}.motion-btn,.build-btn{padding:8px 10px;font-size:.8rem}}

@@ -3,6 +3,7 @@ import { SITE } from './src/config/site.js';
 import { PROJECTS } from './src/data/projects.js';
 import { EXPERIENCE, SKILLS, TOOLS } from './src/data/experience.js';
 import { initMotion } from './src/motion.js';
+import { initSwarmBuild } from './src/swarm-build.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDialog();
   initForm();
   initMotion(SITE); // Task 11 — scroll progress, reveals, Motion toggle
+  initSwarmBuild(); // Swarm Rebuild spectacle behind the header Build button
   $('#year').textContent = new Date().getFullYear();
 });
 
